@@ -29,8 +29,8 @@ export class ProportionUtil {
         this.logo = {
             width: width, // The width of the logo in pixels
             height: height, // The height of the logo in pixels
-            barWidth: 1 / 50, // A bar is 1/50th of the logo width
-            stripHeight: 4 / 50, // A bar is 4/50ths of the logo height
+            barWidth: 1 / 38, // A bar is 1/38th of the logo width
+            stripHeight: 4 / 38, // A bar is 4/38ths of the logo width, the logo is drawn
             BARSPERSTRIP: 24, // There are 24 bars of data in each strip of the logo
             radiansRotated: 180 - 90 - Math.atan(heightCalcTriangleHeight / heightCalcTriangleWidth) // If the logo is rotated
         }
@@ -88,7 +88,6 @@ export class ProportionUtil {
 
     private getImageCoordFromLogoCoord(logoCoord: IPoint): IPoint {
         // Formula from https://stackoverflow.com/questions/20104611/find-new-coordinates-of-a-point-after-rotation
-        // This is for clockwise rotation, see source first comment
         let x = (logoCoord.y * Math.sin(this.logo.radiansRotated)) + (logoCoord.x * Math.cos(this.logo.radiansRotated));
         let y = (-logoCoord.y * Math.cos(this.logo.radiansRotated)) + (logoCoord.x * Math.sin(this.logo.radiansRotated));
         return {x: x, y: y};
