@@ -19,20 +19,20 @@ class ImageGenerator {
         this.ctx = this.canvas.getContext('2d');
         this.ctx.fillStyle = "blue";
         //right most edge of circle is 100px away from left corner of S
-        this.ctx.rotate((Math.PI/180)* 35);
 
-        this.ctx.arc(280,270, 20, 0 , 360, false);
-        this.ctx.fill();
-        this.ctx.closePath();
-        this.ctx.arc(280,680, 20, 0 , 360, false);
-        this.ctx.fill();
-        this.ctx.closePath();
-        this.ctx.arc(900,270, 20, 0 , 360, false);
-        this.ctx.fill();
-        this.ctx.closePath();
 
-        this.ctx.translate(400, 200);
+        // this.ctx.arc(280,270, 20, 0 , 360, false);
+        // this.ctx.fill();
+        // this.ctx.closePath();
+        // this.ctx.arc(280,680, 20, 0 , 360, false);
+        // this.ctx.fill();
+        // this.ctx.closePath();
+        // this.ctx.arc(900,270, 20, 0 , 360, false);
+        // this.ctx.fill();
+        // this.ctx.closePath();
 
+        this.ctx.translate(300, 0);
+        this.ctx.rotate((Math.PI/180)* 40);
 
         this.ctx.save();
 
@@ -44,16 +44,13 @@ class ImageGenerator {
         }
         console.log(ans);
 
-        //this.ctx.rotate((Math.PI / 180) * 35);
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "blue";
         this.ctx.fillRect(0, 50, 40, 40);
-        //this.ctx.strokeRect(0, 50, 40, 40);
-        // this.ctx.fillRect(280, 0, 200, 40);
-        // this.ctx.strokeRect(280, 0, 200, 40);
+
         this.ctx.fillRect(340, 460, 40, 40);
         this.ctx.strokeRect(340, 460, 40, 40);
-        //this.ctx.fillRect(0, 560, 200, 40);
-        //this.ctx.strokeRect(0, 560, 200, 40);
+
+
         this.populateSection(ans[20], 40, 50, 60, 40, 0, false);
         this.populateSection(ans[21], 100, 50, 60, 40, 0, false);
         this.populateSection(ans[22], 160, 50, 60, 40, 0, false);
@@ -121,53 +118,3 @@ class ImageGenerator {
 
 new ImageGenerator("1234ABCD1234ABCD1234ABCD").createImage();
 
-
-//
-//         ctx.translate(50, 50);
-//         ctx.rotate((Math.PI / 180) * (30));
-//         ctx.fillStyle = '#f00';
-//         ctx.beginPath();
-//         ctx.moveTo(50, 50);
-//         ctx.lineTo(100, 50);
-//         ctx.lineTo(125, 93.3);
-//         ctx.lineTo(100, 136.6);
-//         ctx.lineTo(50, 136.6);
-//         ctx.lineTo(25, 93.3);
-//         ctx.closePath();
-//         ctx.fill();
-//         ctx.fillStyle = 'blue';
-//         ctx.fillRect(75, 93.3, 1, 1);
-//
-//         ctx.fillStyle = 'blue';
-//
-//         ctx.beginPath();
-// //(x,y)
-//         ctx.moveTo(50, 50);
-// //(x+s,y)
-//         ctx.lineTo(100, 50);
-// //(x+s-(s/8),y+(s/4))
-//         ctx.lineTo(93.75, 62.5);
-// //(x+(s/8), y+(s/4))
-//         ctx.lineTo(56.25, 62.5);
-// //(x - (s/16) , y + s*(sqrt(3)/2) - s/4)
-//         ctx.lineTo(46.9, 80.8);
-// //(x+s+s/2-s/8, y + s*(sqrt(3)/2) - s/4)
-//         ctx.lineTo(118.75, 80.8);
-// //(x + s + s/2,y + (sqrt(3)/2)*s)
-//         ctx.lineTo(125, 93.3);
-// //(x+s, y+s*sqrt(3))
-//         ctx.lineTo(100, 136.6);
-// //(x, y + s * sqrt(3))
-//         ctx.lineTo(50, 136.6);
-// //(x+(s/8), y + s * sqrt(3) - (s/4))
-//         ctx.lineTo(56.25, 124);
-// //(x+s-(s/8),y + s * sqrt(3) - (s/4))
-//         ctx.lineTo(93.75, 124);
-// //(x + s + s/16,y + s*(sqrt(3)/2) + s*(sqrt(3)/8) )
-//         ctx.lineTo(103.1, 104.1);
-// //(x - (s/2) + s/8, y + s*(sqrt(3)/2) + s*(sqrt(3)/8) )
-//         ctx.lineTo(31.25, 104.1);
-// //(x - (s/2), y + s*(sqrt(3)/2) )
-//         ctx.lineTo(25, 93.3);
-//         ctx.closePath();
-//         ctx.fill();
