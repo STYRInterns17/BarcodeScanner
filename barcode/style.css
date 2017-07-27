@@ -1,0 +1,13 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    background: teal;
+}
+canvas { 
+    border: 1px solid yellow; 
+}
+
+#measure { 
+    position: absolute; 
+}
