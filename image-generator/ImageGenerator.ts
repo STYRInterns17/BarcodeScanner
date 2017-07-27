@@ -8,9 +8,13 @@ class ImageGenerator {
     private inputString: String;
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
+    private imageWidth: number;
+    private imageHeight: number;
 
-    constructor(inputStr: String) {
+    constructor(inputStr: String, imageWidth: number, imageHeight: number) {
         this.inputString = inputStr;
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
     }
 
     public createImage() {
@@ -32,7 +36,7 @@ class ImageGenerator {
         // this.ctx.closePath();
 
         this.ctx.translate(300, 0);
-        this.ctx.rotate((Math.PI/180)* 40);
+        //this.ctx.rotate((Math.PI/180)* 40);
 
         this.ctx.save();
 
@@ -48,7 +52,7 @@ class ImageGenerator {
         this.ctx.fillRect(0, 50, 40, 40);
 
         this.ctx.fillRect(340, 460, 40, 40);
-        this.ctx.strokeRect(340, 460, 40, 40);
+        //this.ctx.strokeRect(340, 460, 40, 40);
 
 
         this.populateSection(ans[20], 40, 50, 60, 40, 0, false);
@@ -76,7 +80,8 @@ class ImageGenerator {
         this.populateSection(ans[2], 220, 460, 60, 40, 0, false);
         this.populateSection(ans[1], 160, 460, 60, 40, 0, false);
         this.populateSection(ans[0], 100, 460, 60, 40, 0, false);
-
+        this.ctx.fillRect(100, 50, 10, 450);
+        this.ctx.fillRect(0, 300, 380, 10);
     }
 
     private populateSection(binaryStr, x, y, width, height, angle, reverse: boolean) {
@@ -116,5 +121,5 @@ class ImageGenerator {
     }
 }
 
-new ImageGenerator("1234ABCD1234ABCD1234ABCD").createImage();
+new ImageGenerator("1234ABCD1234ABCD1234ABCD", 300, 300).createImage();
 
