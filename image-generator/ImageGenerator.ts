@@ -8,35 +8,26 @@ class ImageGenerator {
     private inputString: String;
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
-    private imageWidth: number;
-    private imageHeight: number;
+    private imageWidthHeight: number;
 
-    constructor(inputStr: String, imageWidth: number, imageHeight: number) {
+    constructor(inputStr: String, imageWidth: number) {
         this.inputString = inputStr;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
+        this.imageWidthHeight = imageWidth;
     }
 
     public createImage() {
-
+        //Image is 38 boxWidths wide by 45 boxwidths long
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.ctx = this.canvas.getContext('2d');
+        //calculate canvas height necessary for rotation to still be within canvas
+        let canvasHeight = Math.sqrt(Math.pow(this.imageWidthHeight, 2) + Math.pow((this.imageWidthHeight * 45) / 38, 2));
+        this.canvas.width = canvasHeight;
+        this.canvas.height = canvasHeight;
         this.ctx.fillStyle = "blue";
-        //right most edge of circle is 100px away from left corner of S
 
-
-        // this.ctx.arc(280,270, 20, 0 , 360, false);
-        // this.ctx.fill();
-        // this.ctx.closePath();
-        // this.ctx.arc(280,680, 20, 0 , 360, false);
-        // this.ctx.fill();
-        // this.ctx.closePath();
-        // this.ctx.arc(900,270, 20, 0 , 360, false);
-        // this.ctx.fill();
-        // this.ctx.closePath();
-
-        this.ctx.translate(300, 0);
-        //this.ctx.rotate((Math.PI/180)* 40);
+        //single boxunit is 1 width by 4 height
+        let boxWidth = this.imageWidthHeight / 38;
+        let boxHeight = boxWidth * 4;
 
         this.ctx.save();
 
@@ -48,40 +39,46 @@ class ImageGenerator {
         }
         console.log(ans);
 
+        this.ctx.translate(canvasHeight / 2, canvasHeight / 2);
+        this.ctx.rotate((Math.PI/180)* 45);
+        this.ctx.strokeRect(0, 0, 10, 10);
+        this.ctx.fillStyle = "green";
+
+        //Draw locator BLUE locator squares
+        //this.ctx.fillRect(-this.imageWidthHeight / 2, -(this.imageWidthHeight * 45) / 76, this.imageWidthHeight, (this.imageWidthHeight * 45) / 38);
         this.ctx.fillStyle = "blue";
-        this.ctx.fillRect(0, 50, 40, 40);
+        this.ctx.fillRect(-this.imageWidthHeight / 2, -(this.imageWidthHeight * 45) / 76, boxWidth * 4, boxWidth * 4);
+        this.ctx.fillRect(this.imageWidthHeight / 2 - boxWidth * 4, (this.imageWidthHeight * 45) / 76 - boxWidth * 4, boxWidth * 4, boxWidth * 4);
+        this.ctx.fillRect(-this.imageWidthHeight / 2, (this.imageWidthHeight * 45) / 76 - boxWidth * 4, boxWidth * 4, boxWidth * 4);
 
-        this.ctx.fillRect(340, 460, 40, 40);
-        //this.ctx.strokeRect(340, 460, 40, 40);
+        this.ctx.translate(-this.imageWidthHeight / 2, -(this.imageWidthHeight * 45) / 76);
 
+        //draw binary data
+        this.populateSection(ans[20], boxWidth * 4, 0, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[21], boxWidth * 10, 0, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[22], boxWidth * 16, 0, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[23], boxWidth * 22, 0, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[19], boxWidth * 4, -boxWidth * 4, boxWidth * 6, boxHeight, 90, true);
+        this.populateSection(ans[18], boxWidth * 10, -boxWidth * 4, boxWidth * 6, boxHeight, 90, true);
+        this.populateSection(ans[17], boxWidth * 16, -boxWidth * 4, boxWidth * 6, boxHeight, 90, true);
+        this.populateSection(ans[16], boxWidth * 22, -boxWidth * 4, boxWidth * 6, boxHeight, 90, true);
+        this.populateSection(ans[15], 0, boxWidth * 28, boxWidth * 6, boxHeight, 0, true);
+        this.populateSection(ans[14], boxWidth * 6, boxWidth * 28, boxWidth * 6, boxHeight, 0, true);
+        this.populateSection(ans[13], boxWidth * 12, boxWidth * 28, boxWidth * 6, boxHeight, 0, true);
+        this.populateSection(ans[12], boxWidth * 18, boxWidth * 28, boxWidth * 6, boxHeight, 0, true);
 
-        this.populateSection(ans[20], 40, 50, 60, 40, 0, false);
-        this.populateSection(ans[21], 100, 50, 60, 40, 0, false);
-        this.populateSection(ans[22], 160, 50, 60, 40, 0, false);
-        this.populateSection(ans[23], 220, 50, 60, 40, 0, false);
-        this.populateSection(ans[19], 90, -40, 60, 40, 90, true);
-        this.populateSection(ans[18], 150, -40, 60, 40, 90, true);
-        this.populateSection(ans[17], 210, -40, 60, 40, 90, true);
-        this.populateSection(ans[16], 270, -40, 60, 40, 90, true);
-        this.populateSection(ans[15], 0, 330, 60, 40, 0, true);
-        this.populateSection(ans[14], 60, 330, 60, 40, 0, true);
-        this.populateSection(ans[13], 120, 330, 60, 40, 0, true);
-        this.populateSection(ans[12], 180, 330, 60, 40, 0, true);
-
-        this.populateSection(ans[11], 140, 180, 60, 40, 0, true);
-        this.populateSection(ans[10], 200, 180, 60, 40, 0, true);
-        this.populateSection(ans[9], 260, 180, 60, 40, 0, true);
-        this.populateSection(ans[8], 320, 180, 60, 40, 0, true);
-        this.populateSection(ans[7], 220, -380, 60, 40, 90, true);
-        this.populateSection(ans[6], 280, -380, 60, 40, 90, true);
-        this.populateSection(ans[5], 340, -380, 60, 40, 90, true);
-        this.populateSection(ans[4], 400, -380, 60, 40, 90, true);
-        this.populateSection(ans[3], 280, 460, 60, 40, 0, false);
-        this.populateSection(ans[2], 220, 460, 60, 40, 0, false);
-        this.populateSection(ans[1], 160, 460, 60, 40, 0, false);
-        this.populateSection(ans[0], 100, 460, 60, 40, 0, false);
-        this.ctx.fillRect(100, 50, 10, 450);
-        this.ctx.fillRect(0, 300, 380, 10);
+        this.populateSection(ans[11], boxWidth * 14, boxWidth * 13, boxWidth* 6, boxHeight, 0, true);
+        this.populateSection(ans[10], boxWidth * 20, boxWidth * 13, boxWidth* 6, boxHeight, 0, true);
+        this.populateSection(ans[9], boxWidth * 26, boxWidth * 13, boxWidth* 6, boxHeight, 0, true);
+        this.populateSection(ans[8], boxWidth * 32, boxWidth * 13, boxWidth* 6, boxHeight, 0, true);
+        this.populateSection(ans[7], boxWidth * 17, -boxWidth * 38, boxWidth * 6, boxHeight, 90, true);
+        this.populateSection(ans[6], boxWidth * 23, -boxWidth * 38, boxWidth * 6, boxHeight, 90, true);
+        this.populateSection(ans[5], boxWidth * 29, -boxWidth * 38, boxWidth * 6, boxHeight, 90, true);
+        this.populateSection(ans[4], boxWidth * 35, -boxWidth * 38, boxWidth * 6, boxHeight, 90, true);
+        this.populateSection(ans[3], boxWidth * 28, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[2], boxWidth * 22, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[1], boxWidth * 16, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[0], boxWidth * 10, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);
     }
 
     private populateSection(binaryStr, x, y, width, height, angle, reverse: boolean) {
@@ -92,13 +89,11 @@ class ImageGenerator {
         this.ctx.strokeRect(0, 0, width, height);
 
         if (reverse) {
-            let inverseJ=0;
+            let inverseJ = 0;
             for (let j = binaryStr.length - 1; j >= 0; j--) {
-                console.log(j);
-                console.log(binaryStr[j]);
-                this.ctx.fillStyle = binaryStr[j] === '1'?'orange':'white';
-                this.ctx.fillRect(inverseJ * 10, 0, width / 6, height);
-                this.ctx.strokeRect(inverseJ * 10, 0, width / 6, height);
+                this.ctx.fillStyle = binaryStr[j] === '1' ? 'orange' : 'white';
+                this.ctx.fillRect(inverseJ * width / 6, 0, width / 6, height);
+                this.ctx.strokeRect(inverseJ * width / 6, 0, width / 6, height);
                 inverseJ++;
             }
         }
@@ -106,20 +101,19 @@ class ImageGenerator {
             for (let j = 0; j < binaryStr.length; j++) {
                 if (binaryStr.charAt(j) == '1') {
                     this.ctx.fillStyle = 'orange';
-                    this.ctx.fillRect(j * 10, 0, width / 6, height);
-                    this.ctx.strokeRect(j * 10, 0, width / 6, height);
+                    this.ctx.fillRect(j * width / 6, 0, width / 6, height);
+                    this.ctx.strokeRect(j * width / 6, 0, width / 6, height);
                 } else {
                     this.ctx.fillStyle = "white";
-                    this.ctx.fillRect(j * 10, 0, width / 6, height);
-                    this.ctx.strokeRect(j * 10, 0, width / 6, height);
+                    this.ctx.fillRect(j * width / 6, 0, width / 6, height);
+                    this.ctx.strokeRect(j * width / 6, 0, width / 6, height);
                 }
             }
         }
 
-        console.log(binaryStr);
         this.ctx.restore();
     }
 }
 
-new ImageGenerator("1234ABCD1234ABCD1234ABCD", 300, 300).createImage();
+new ImageGenerator("1234ABCD1234ABCD1234ABCD", 1000).createImage();
 
