@@ -39,7 +39,7 @@ export class ProportionUtil {
 
     public getStartingPoint(): IPoint {
         // x and y are inverted accross their respective lengths because the calculation are from the bottom right corner but the orgin is in the top left
-        let x = this.logo.width - (this.getCornerWidth() + (this.getShortBarWidth() * this.logo.BARSPERSTRIP));
+        let x = this.logo.width - (this.getCornerWidth() + (this.getShortBarWidth() * this.logo.BARSPERSTRIP) - (this.getShortBarWidth() / 2));
         let y = this.logo.height - (this.getCornerHeight() / 2);
 
         return this.getImageCoordFromLogoCoord({x, y});
@@ -88,8 +88,17 @@ export class ProportionUtil {
 
     private getImageCoordFromLogoCoord(logoCoord: IPoint): IPoint {
         // Formula from https://stackoverflow.com/questions/20104611/find-new-coordinates-of-a-point-after-rotation
-        let x = (logoCoord.y * Math.sin(this.logo.radiansRotated)) + (logoCoord.x * Math.cos(this.logo.radiansRotated));
-        let y = (-logoCoord.y * Math.cos(this.logo.radiansRotated)) + (logoCoord.x * Math.sin(this.logo.radiansRotated));
+        // Addition information about translating origin https://gamedev.stackexchange.com/questions/86755/how-to-calculate-corner-positions-marks-of-a-rotated-tilted-rectangle
+
+        // Translate point to topCorner
+        let tempX = logoCoord.x  - this.topCorner.x;
+        let tempY = logoCoord.y - this.topCorner.y;
+        // Apply rotation
+        let rotatedX = (tempY * Math.sin(this.logo.radiansRotated)) + (tempX * Math.cos(this.logo.radiansRotated));
+        let rotatedY = (-tempY * Math.cos(this.logo.radiansRotated)) + (tempX * Math.sin(this.logo.radiansRotated));
+        // Undo original translation
+        let x = rotatedX + this.topCorner.x;
+        let y = rotatedY + this.topCorner.y;
         return {x: x, y: y};
     }
 
