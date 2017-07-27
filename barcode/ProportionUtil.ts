@@ -51,6 +51,10 @@ export class ProportionUtil {
 
         return this.getImageCoordFromLogoCoord({x, y});
     }
+    
+    public getLogoRotation():number {
+        return this.logo.radiansRotated;
+    }
 
     public getShortBarHeight(): number {
         return this.logo.barWidth * this.logo.height;
