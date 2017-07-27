@@ -1,21 +1,26 @@
 /**
  * Created by STYRLabs2 on 7/20/2017.
  */
-const TABLE = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
 
 class ImageGenerator {
     private inputString: String;
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
     private imageWidthHeight: number;
+    private image: HTMLImageElement;
+    private TABLE: String;
 
     constructor(inputStr: String, imageWidth: number) {
+        this.image = new Image();
+        this.image.height = imageWidth;
+        this.image.width = imageWidth;
         this.inputString = inputStr;
         this.imageWidthHeight = imageWidth;
+        this.TABLE = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        this.createImage();
     }
 
-    public createImage() {
+    private createImage() {
         //Image is 38 boxWidths wide by 45 boxwidths long
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.ctx = this.canvas.getContext('2d');
@@ -34,14 +39,14 @@ class ImageGenerator {
         let ans = [];
         var pad = "000000";
         for (let i = 0; i < this.inputString.length; i++) {
-            let str = TABLE.indexOf(this.inputString.charAt(i)).toString(2);
+            let str = this.TABLE.indexOf(this.inputString.charAt(i)).toString(2);
             ans.push(pad.substring(0, pad.length - str.length) + str);
         }
         console.log(ans);
 
         this.ctx.translate(canvasHeight / 2, canvasHeight / 2);
         this.ctx.rotate((Math.PI/180)* 45);
-        this.ctx.strokeRect(0, 0, 10, 10);
+        //this.ctx.strokeRect(0, 0, 10, 10);
         this.ctx.fillStyle = "green";
 
         //Draw locator BLUE locator squares
@@ -79,6 +84,8 @@ class ImageGenerator {
         this.populateSection(ans[2], boxWidth * 22, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[1], boxWidth * 16, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[0], boxWidth * 10, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);
+
+        this.image.src = this.canvas.toDataURL("image/png");
     }
 
     private populateSection(binaryStr, x, y, width, height, angle, reverse: boolean) {
@@ -113,7 +120,10 @@ class ImageGenerator {
 
         this.ctx.restore();
     }
+
+    public exportImage(): HTMLImageElement{
+        return this.image;
+    }
 }
 
-new ImageGenerator("1234ABCD1234ABCD1234ABCD", 1000).createImage();
-
+new ImageGenerator("1234ABCD1234ABCD1234ABCD", 1000);

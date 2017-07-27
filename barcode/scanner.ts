@@ -1,6 +1,7 @@
 /**
  * Created by STYRLab1 on 7/20/2017.
  */
+
 class scanner {
     private Image: any;
     private canvas: HTMLCanvasElement;
@@ -13,6 +14,7 @@ class scanner {
     }
 
     public draw() {
+
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.canvas.width = this.Image.width;
         this.canvas.height = this.Image.height;
@@ -39,6 +41,21 @@ class scanner {
         scanImage.addEventListener('click', () => this.barcodeScanner());
         let invertColor = document.getElementById('invertColor');
         invertColor.addEventListener('click', () => this.invert());
+        let generateImage = document.getElementById('generate');
+        generateImage.addEventListener('click', () => this.generateImage())
+    }
+
+    private generateImage() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        let img = new ImageGenerator("1234ABCD1234ABCD1234ABCD", 1000).exportImage();
+        img.onload = () => {
+            let ct = document.getElementById('measure');
+            ct.appendChild(img);
+            this.canvas.width = img.width;
+            this.canvas.height = img.height;
+            ct.removeChild(img);
+            this.ctx.drawImage(img, 0, 0);
+        };
     }
 
     private imageLoader() {
