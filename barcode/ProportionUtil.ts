@@ -8,8 +8,8 @@ export class ProportionUtil {
     /*this.logo = {
      width: 380,
      height: 450,
-     BARWIDTH: 10,
-     STRIPHEIGHT: 40,
+     barWidth: 10,
+     stripHeight: 40,
      BARSPERSTRIP: 24,
      }*/
 
@@ -23,13 +23,16 @@ export class ProportionUtil {
         let heightCalcTriangleWidth = topCorner.x - sideCorner.x;
         let heightCalcTriangleHeight = sideCorner.y - topCorner.y;
 
+        let width = this.getHypotenuseLength(widthCalcTriangleWidth, widthCalcTriangleHeight);
+        let height = this.getHypotenuseLength(heightCalcTriangleWidth, heightCalcTriangleHeight);
+
         this.logo = {
-            width: this.getHypotenuseLength(widthCalcTriangleWidth, widthCalcTriangleHeight),
-            height: this.getHypotenuseLength(heightCalcTriangleWidth, heightCalcTriangleHeight),
-            BARWIDTH: 10,
-            STRIPHEIGHT: 40,
-            BARSPERSTRIP: 24,
-            radiansRotated: Math.acos(widthCalcTriangleHeight / widthCalcTriangleWidth),
+            width: width, // The width of the logo in pixels
+            height: height, // The height of the logo in pixels
+            barWidth: 1 / 50, // A bar is 1/50th of the logo width
+            stripHeight: 4 / 50, // A bar is 4/50ths of the logo height
+            BARSPERSTRIP: 24, // There are 24 bars of data in each strip of the logo
+            radiansRotated: Math.acos(widthCalcTriangleHeight / widthCalcTriangleWidth) // If the logo is rotated 
         }
     }
 
@@ -50,27 +53,27 @@ export class ProportionUtil {
     }
 
     public getShortBarHeight(): number {
-        return this.logo.BARWIDTH / this.logo.height * 100;
+        return this.logo.barWidth * this.logo.height;
     }
 
     public getShortBarWidth(): number {
-        return this.logo.STRIPHEIGHT / this.logo.width * 100;
+        return this.logo.stripHeight * this.logo.width;
     }
 
     public getTallBarHeight(): number {
-        return this.logo.STRIPHEIGHT / this.logo.height * 100;
+        return this.logo.stripHeight * this.logo.height;
     }
 
     public getTallBarWidth(): number {
-        return this.logo.BARWIDTH / this.logo.width * 100;
+        return this.logo.barWidth * this.logo.width;
     }
 
     public getCornerHeight(): number {
-        return this.logo.STRIPHEIGHT / this.logo.height * 100;
+        return this.logo.stripHeight * this.logo.height;
     }
 
     public getCornerWidth(): number {
-        return this.logo.STRIPHEIGHT / this.logo.width * 100;
+        return this.logo.stripHeight * this.logo.width;
     }
 
     private getHypotenuseLength(a: number, b: number): number {
@@ -93,8 +96,8 @@ export class ProportionUtil {
 export interface ILogoDetail {
     width: number,
     height: number,
-    BARWIDTH: number,
-    STRIPHEIGHT: number,
+    barWidth: number,
+    stripHeight: number,
     BARSPERSTRIP: number,
     radiansRotated: number,
 }
