@@ -85,18 +85,29 @@ class scanner {
 
     private scan() {
 
-        let topCorner = {
+        let topCorner: IPoint = {
             x: 840,
             y: 3
         };
-        let bottomCorner = {
+        let sideCorner: IPoint  = {
             x: 3,
             y: 840
         };
-        let sideCorner = {
+        let bottomCorner: IPoint  = {
             x: 709,
             y: 1546
         };
+
+        let heightCalcTriangleWidth = topCorner.x - sideCorner.x;
+
+        let heightCalcTriangleHeight = sideCorner.y - topCorner.y;
+
+        let rotateAngle = Math.atan(heightCalcTriangleHeight / heightCalcTriangleWidth);
+
+        this.ctx.translate(topCorner.x, topCorner.y);
+        this.ctx.rotate(rotateAngle);
+        this.ctx.fillRect(0, 0, 100, 10);
+
 
         let Proportions = new ProportionUtil(topCorner, bottomCorner, sideCorner);
         let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
@@ -104,30 +115,46 @@ class scanner {
         let pixel, rgba;
         let bitStorage = [];
 
-        for (let x = Proportions.getStartingPoint().x; x < (this.canvas.width / 36) * 24; x++) {
-            for (let y = Proportions.getStartingPoint().y; y < (this.canvas.width / 36) * 24; y++) {
+        for (let x = 226; x < (this.canvas.width / 36) * 24; x++) {
+            for (let y = 988; y < (this.canvas.width / 36) * 24; y++) {
 
                 //Check Color
                 pixel = this.ctx.getImageData(x, y, 1, 1);
-                this.ctx.fillStyle = "0000FF";
+                console.log(x, y);
+                this.ctx.fillStyle = "FF00FF";
                 this.ctx.fillRect(x, y, 1, 1);
                 data = pixel.data;
                 rgba = 'rgba(' + data[0] + ', ' + data[1] +
                     ', ' + data[2] + ', ' + (data[3] / 255) + ')';
+                console.log(rgba);
 
-                if (data[0] + data[1] + data[2] == 765)
+                if (data[0] + data[1] + data[2] == 765) //765
                     bitStorage.push(1);
-                else if (data[0] + data[1] + data[2] == 420)
+                else if (data[0] + data[1] + data[2] == 420) //420
                     bitStorage.push(0);
 
-                //Add width && Rotate
-                x += Proportions.getShortBarWidth() + y * Math.sin(Proportions.getLogoRotation()) + x * Math.cos(Proportions.getLogoRotation());
+                //Add width && Rotate Both points
+                x += Proportions.getShortBarWidth() - y * Math.sin(Proportions.getLogoRotation()) + x * Math.cos(Proportions.getLogoRotation());
 
                 y += y * Math.cos(Proportions.getLogoRotation()) + x * Math.sin(Proportions.getLogoRotation());
 
+                console.log(x, y);
+
+                let newPoint: IPoint = {
+                    x: x,
+                    y: y
+                };
+
+                Proportions.getImageCoordFromLogoCoord(newPoint);
             }
-            console.log(bitStorage);
         }
+        console.log(bitStorage);
+    }
+
+    private rotateImage(){
+        //Set origin of the screen to the side corner pixel
+
+        //Check if the image after a single counter clockwise rotation
     }
 
     /*
@@ -185,7 +212,7 @@ class scanner {
         this.ctx.putImageData(imageData, 0, 0);
     }
 
-    private findBluePixel(scanWidth: number, scanHeight: number) {
+    public findBluePixel(scanWidth: number, scanHeight: number) {
         for (let i = 0; i < 100; i++) {
             for (let j = 0; j < 100; j++) {
                 // ctx.fillStyle = "red";
