@@ -13,6 +13,10 @@ export class ProportionUtil {
      BARSPERSTRIP: 24,
      }*/
 
+    private strips: IStrip[] = []; // Measured in percentages
+    private dataPoints: IPoint[] = [];
+
+
     // topCorner is as a person looking at the image would say is the top
     constructor(private topCorner: IPoint, private bottomCorner: IPoint, private sideCorner: IPoint) {
         // Order is this way because the bottom corner will always be greater than side
@@ -32,27 +36,79 @@ export class ProportionUtil {
             barWidth: 1 / 38, // A bar is 1/38th of the logo width
             stripHeight: 4 / 38, // A bar is 4/38ths of the logo width, the logo is drawn
             BARSPERSTRIP: 24, // There are 24 bars of data in each strip of the logo
-            radiansRotated: 180 - 90 - Math.atan(heightCalcTriangleHeight / heightCalcTriangleWidth) // If the logo is rotated
+            radiansRotated: Math.atan(heightCalcTriangleHeight / heightCalcTriangleWidth) // If the logo is rotated
+        }
+
+        this.buildStripLocations();
+        this.buildDataPoints();
+
+    }
+
+    public getDataPoints(): IPoint[] {
+        return this.dataPoints;
+    }
+
+    private buildStripLocations(): void {
+        // Horizontal Strips
+        this.strips.push({
+            start: {x: 8.5 * this.getTallBarWidth(), y: 43 * this.getShortBarHeight()},
+            length: this.logo.BARSPERSTRIP,
+            isVertical: false
+        });
+        this.strips.push({
+            start: {x: 0, y: 32 * this.getShortBarHeight()},
+            length: this.logo.BARSPERSTRIP,
+            isVertical: false
+        });
+        this.strips.push({
+            start: {x: 4.5 * this.getTallBarWidth(), y: 2 * this.getShortBarHeight()},
+            length: this.logo.BARSPERSTRIP,
+            isVertical: false
+        });
+        this.strips.push({start:{x: 12.5 * this.getTallBarWidth(), y: 17 * this.getShortBarHeight()},
+            length: this.logo.BARSPERSTRIP,
+            isVertical: false
+        });
+        // Vertical Strips
+        this.strips.push({start:{x: 2 * this.getTallBarWidth(), y: 4.5 * this.getShortBarHeight()},
+            length: this.logo.BARSPERSTRIP,
+            isVertical: true
+        });
+        this.strips.push({start:{x: 36 * this.getTallBarWidth(), y: 13 * this.getShortBarHeight()},
+            length: this.logo.BARSPERSTRIP,
+            isVertical: true
+        });
+    }
+    
+    private buildDataPoints(): void {
+        for(let i = 0; i < this.strips.length; i++) {
+            this.dataPoints.concat(this.getDataPointsOfStrip(this.strips[i]));
+        }
+
+        for(let i = 0; i < this.dataPoints.length; i++) {
+            // Add offset to account for the rest of the image to DataPoint Coordinates
+            this.dataPoints[i] = this.getImageCoordFromLogoCoord(this.dataPoints[i]);
         }
     }
 
+    private getDataPointsOfStrip(strip: IStrip): IPoint[] {
+        // ShortBars scans left to right
+        // Tall bars are scanned top to bottom
+        let data: IPoint[] = [];
+        if (strip.isVertical) {
+            for (let i = 0; i < this.logo.BARSPERSTRIP; i++) {
+                data.push({x: strip.start.x, y: strip.start.y + i * this.getShortBarHeight()})
+            }
+        } else {
+            for (let i = 0; i < this.logo.BARSPERSTRIP; i++) {
+                data.push({x: strip.start.x + i * this.getTallBarWidth(), y: strip.start.y})
+            }
+        }
+        return data;
 
-    public getStartingPoint(): IPoint {
-        // x and y are inverted accross their respective lengths because the calculation are from the bottom right corner but the orgin is in the top left
-        let x = this.logo.width - (this.getCornerWidth() + (this.getShortBarWidth() * this.logo.BARSPERSTRIP) - (this.getShortBarWidth() / 2));
-        let y = this.logo.height - (this.getCornerHeight() / 2);
-
-        return this.getImageCoordFromLogoCoord({x, y});
     }
 
-    public getHalfWayPoint(): IPoint {
-        let x = this.getShortBarWidth() * this.logo.BARSPERSTRIP;
-        let y = this.getCornerWidth() + (this.getShortBarWidth() * this.logo.BARSPERSTRIP) - (this.getCornerHeight() / 2);
-
-        return this.getImageCoordFromLogoCoord({x, y});
-    }
-
-    public getLogoRotation():number {
+    public getLogoRotation(): number {
         return this.logo.radiansRotated;
     }
 
@@ -86,19 +142,26 @@ export class ProportionUtil {
     }
 
 
-    private getImageCoordFromLogoCoord(logoCoord: IPoint): IPoint {
+    private rotatePointAboutTopCorner(logoCoord: IPoint): IPoint {
         // Formula from https://stackoverflow.com/questions/20104611/find-new-coordinates-of-a-point-after-rotation
         // Addition information about translating origin https://gamedev.stackexchange.com/questions/86755/how-to-calculate-corner-positions-marks-of-a-rotated-tilted-rectangle
 
         // Translate point to topCorner
-        let tempX = logoCoord.x  - this.topCorner.x;
+        let tempX = logoCoord.x - this.topCorner.x;
         let tempY = logoCoord.y - this.topCorner.y;
         // Apply rotation
-        let rotatedX = (tempY * Math.sin(this.logo.radiansRotated)) + (tempX * Math.cos(this.logo.radiansRotated));
-        let rotatedY = (-tempY * Math.cos(this.logo.radiansRotated)) + (tempX * Math.sin(this.logo.radiansRotated));
+        let rotatedX = (tempY * Math.sin(-this.logo.radiansRotated)) + (tempX * Math.cos(-this.logo.radiansRotated));
+        let rotatedY = (-tempY * Math.cos(-this.logo.radiansRotated)) + (tempX * Math.sin(-this.logo.radiansRotated));
         // Undo original translation
         let x = rotatedX + this.topCorner.x;
         let y = rotatedY + this.topCorner.y;
+        return {x: x, y: y};
+    }
+
+    private getImageCoordFromLogoCoord(logoCoord: IPoint): IPoint {
+        let x = logoCoord.x + this.sideCorner.x;
+        let y = logoCoord.y + this.topCorner.y
+
         return {x: x, y: y};
     }
 
@@ -117,4 +180,10 @@ export interface ILogoDetail {
 export interface IPoint {
     x: number,
     y: number
+}
+
+export interface IStrip {
+    start: IPoint,
+    length: number,
+    isVertical: boolean
 }
