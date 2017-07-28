@@ -40,38 +40,43 @@ export class ProportionUtil {
     }
 
     private buildStripLocations(): void {
-        // Horizontal Strips
+
         this.strips.push({
-            start: {x: 8.5 * this.getTallBarWidth(), y: 43 * this.getShortBarHeight()},
+            start: {x: 10.5 * this.getTallBarWidth(), y: 43 * this.getShortBarHeight()},
             length: this.logo.BARSPERSTRIP,
             isVertical: false
         });
+
         this.strips.push({
-            start: {x: 0.5 * this.getTallBarWidth(), y: 32 * this.getShortBarHeight()},
+            start: {x: 36 * this.getTallBarWidth(), y: 17.5 * this.getShortBarHeight()},
+            length: this.logo.BARSPERSTRIP,
+            isVertical: true
+        });
+
+        this.strips.push({
+            start: {x: 14.5 * this.getTallBarWidth(), y: 15 * this.getShortBarHeight()},
             length: this.logo.BARSPERSTRIP,
             isVertical: false
         });
+
         this.strips.push({
-            start: {x: 4.5 * this.getTallBarWidth(), y: 2 * this.getShortBarHeight()},
+            start: {x: 0.5 * this.getTallBarWidth(), y: 30 * this.getShortBarHeight()},
             length: this.logo.BARSPERSTRIP,
             isVertical: false
         });
-        this.strips.push({
-            start: {x: 12.5 * this.getTallBarWidth(), y: 17 * this.getShortBarHeight()},
-            length: this.logo.BARSPERSTRIP,
-            isVertical: false
-        });
-        // Vertical Strips
         this.strips.push({
             start: {x: 2 * this.getTallBarWidth(), y: 4.5 * this.getShortBarHeight()},
             length: this.logo.BARSPERSTRIP,
             isVertical: true
         });
+
         this.strips.push({
-            start: {x: 36 * this.getTallBarWidth(), y: 13 * this.getShortBarHeight()},
+            start: {x: 4.5 * this.getTallBarWidth(), y: 2 * this.getShortBarHeight()},
             length: this.logo.BARSPERSTRIP,
-            isVertical: true
+            isVertical: false
         });
+
+
     }
 
     private buildDataPoints(): void {
