@@ -25,7 +25,9 @@ export class ProportionUtil {
             width: width, // The width of the logo in pixels
             height: height, // The height of the logo in pixels
             barWidth: 1 / 38, // A bar is 1/38th of the logo width
-            stripHeight: 4 / 38, // A bar is 4/38ths of the logo width, the logo is drawn
+            barHeight: 1/ 45, // A horizontal bar is 1/45 of the logo height
+            stripHeight: 4 / 38, // A corner is 4/38ths of the logo width,
+            stripWidth: 4 / 45, // A corner is 4/45ths of the logo height
             BARSPERSTRIP: 24, // There are 24 bars of data in each strip of the logo
             radiansRotated: Math.atan(heightCalcTriangleHeight / heightCalcTriangleWidth) // If the logo is rotated
         };
@@ -81,7 +83,7 @@ export class ProportionUtil {
 
     private buildDataPoints(): void {
         for (let i = 0; i < this.strips.length; i++) {
-            this.dataPoints.concat(this.getDataPointsOfStrip(this.strips[i]));
+            this.dataPoints = this.dataPoints.concat(this.getDataPointsOfStrip(this.strips[i]));
         }
 
         for (let i = 0; i < this.dataPoints.length; i++) {
@@ -112,11 +114,11 @@ export class ProportionUtil {
     }
 
     public getShortBarHeight(): number {
-        return this.logo.barWidth * this.logo.height;
+        return this.logo.barHeight * this.logo.height;
     }
 
     public getShortBarWidth(): number {
-        return this.logo.stripHeight * this.logo.width;
+        return this.logo.stripWidth * this.logo.width;
     }
 
     public getTallBarHeight(): number {
@@ -132,7 +134,7 @@ export class ProportionUtil {
     }
 
     public getCornerWidth(): number {
-        return this.logo.stripHeight * this.logo.width;
+        return this.logo.stripWidth * this.logo.width;
     }
 
     private getHypotenuseLength(a: number, b: number): number {
@@ -171,7 +173,9 @@ export interface ILogoDetail {
     width: number,
     height: number,
     barWidth: number,
+    barHeight: number,
     stripHeight: number,
+    stripWidth: number,
     BARSPERSTRIP: number,
     radiansRotated: number,
 }
