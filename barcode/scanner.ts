@@ -76,8 +76,9 @@ class scanner {
     }
 
     private barcodeScanner2() {
-        let scanWidth = this.canvas.width / 5;
-        let scanHeight = this.canvas.height / 5;
+        let scanWidth = this.canvas.width / 3;
+        let scanHeight = this.canvas.height / 4;
+
         console.log(scanWidth);
         console.log(scanHeight);
         console.log(this.findBluePixel(scanWidth, scanHeight));
@@ -212,15 +213,31 @@ class scanner {
         this.ctx.putImageData(imageData, 0, 0);
     }
 
-    public findBluePixel(scanWidth: number, scanHeight: number) {
-        for (let i = 0; i < 100; i++) {
-            for (let j = 0; j < 100; j++) {
-                // ctx.fillStyle = "red";
-                // ctx.fillRect(Math.round(scanWidth/2), j, 1, 1);
-                if (this.isBlue(Math.round(scanWidth / 2), j)) {
+    private findBluePixel(scanWidth: number, scanHeight: number) {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < scanHeight; j++) {
+                let scanX = Math.round(scanWidth / 4 * (3 - i) + scanWidth);
+                let scanY = j;
+                // this.ctx.fillStyle = "red";
+                // this.ctx.fillRect(Math.round(scanWidth / 4) * (3 - i) + scanWidth, j, 1, 1);
+                if (this.isBlue(scanX, scanY)) {
+                    console.log(this.isBlue(904, 66));
                     console.log("Success");
-                    this.findCenterCircle(scanWidth / 2, j);
-                    return "(" + scanWidth / 2 + "," + j + ")";
+                    console.log("First blue pixel: ", scanX, " ", scanY);
+                    let firstCoord = this.findTopSquareCorner(scanX, scanY, []);
+                    let secondCoord = this.findRightSquareCorner(scanX, scanY, []);
+                    console.log(firstCoord, secondCoord);
+
+                    let blueSquareWidth = Math.sqrt((Math.pow(firstCoord.x - secondCoord.x, 2)) + Math.pow(firstCoord.y - secondCoord.y, 2));
+                    
+                    let topLeftDist = (blueSquareWidth * 45) / 4;
+                    let topBottomDist = (blueSquareWidth * 38) / 4;
+
+                    this.ctx.translate(firstCoord.x,firstCoord.y);
+                    this.ctx.rotate(Math.PI/4);
+                    this.ctx.fillRect(0, 1183, 10, 10);
+                    this.ctx.fillRect(994, 1183, 10, 10);
+                    return ("Found blue pixel");
                 }
                 // rgba = 'rgba(' + data[0] + ', ' + data[1] +
                 //     ', ' + data[2] + ', ' + (data[3] / 255) + ')';
@@ -235,18 +252,44 @@ class scanner {
         return data[0] < 160 && data[1] < 160 && data[2] > 100;
     }
 
-    private findCenterCircle(x: number, y: number) {
-        let circleCoords = [];
+    private findTopSquareCorner(x: number, y: number, squareCoords: Array<IPoint>): IPoint {
+        // this.ctx.fillStyle = "red";
+        // this.ctx.fillRect(x, y, 1, 1);
+        let coord: IPoint = {x: x, y: y};
         if (this.isBlue(x + 1, y)) {
-            //we know we are on left side
-            console.log("right is blue");
+            //we know we are on the left side
+            squareCoords.push(coord);
+            return this.findTopSquareCorner(x + 1, y - 1, squareCoords);
         } else if (this.isBlue(x - 1, y)) {
             //we know we are on right side
-            console.log("left is blue");
+            squareCoords.push(coord);
+            return this.findTopSquareCorner(x - 1, y - 1, squareCoords);
         } else {
-            //we are at top or bottom
+            return (coord);
+        }
+    }
+
+    private findRightSquareCorner(x: number, y: number, squareCoords: Array<IPoint>): IPoint {
+        squareCoords = [];
+        this.ctx.fillStyle = "red";
+        this.ctx.fillRect(x, y, 1, 1);
+        let coord: IPoint = {x: x, y: y};
+        //Might need to increase search area as pixels around square edges tend to be lighter blue
+        if (this.isBlue(x + 1, y + 1)) {
+            //we know we are on the left side
+            console.log("RECURSION!!!");
+            return this.findRightSquareCorner(x + 1, y + 1, squareCoords);
+        } else {
+            //we are at top of square
+            console.log(squareCoords);
+            return (coord)
+
         }
     }
 }
 
+interface IPoint {
+    x: number,
+    y: number
+}
 new scanner('barcode.png').draw();
