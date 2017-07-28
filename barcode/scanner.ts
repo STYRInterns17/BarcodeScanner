@@ -20,13 +20,10 @@ class scanner {
         this.canvas.height = this.Image.height;
         this.ctx = this.canvas.getContext('2d');
 
-
         this.ctx.drawImage(this.Image, 0, 0, this.Image.width, this.Image.height,
             0, 0, this.canvas.width, this.canvas.height);
 
         this.Image.style.display = 'none';
-
-        let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
 
         /*
          * Loads a scaled image to fit the canvas without streching.
@@ -43,6 +40,8 @@ class scanner {
         invertColor.addEventListener('click', () => this.invert());
         let generateImage = document.getElementById('generate');
         generateImage.addEventListener('click', () => this.generateImage())
+        let scan = document.getElementById('scan');
+        scan.addEventListener('click', () => this.scan());
     }
 
     private generateImage() {
@@ -84,11 +83,50 @@ class scanner {
         console.log(this.findBluePixel(scanWidth, scanHeight));
     };
 
-    private static scan(x: number, y: number, barcodeWidth: number) {
-        for (let i = 0; i < x; i++) {
-            for (let j = 0; j < y; j++) {
+    private scan() {
+
+        let topCorner = {
+            x: 840,
+            y: 3
+        };
+        let bottomCorner = {
+            x: 3,
+            y: 840
+        };
+        let sideCorner = {
+            x: 709,
+            y: 1546
+        };
+
+        let Proportions = new ProportionUtil(topCorner, bottomCorner, sideCorner);
+        let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        let data = imageData.data;
+        let pixel, rgba;
+        let bitStorage = [];
+
+        for (let x = Proportions.getStartingPoint().x; x < (this.canvas.width / 36) * 24; x++) {
+            for (let y = Proportions.getStartingPoint().y; y < (this.canvas.width / 36) * 24; y++) {
+
+                //Check Color
+                pixel = this.ctx.getImageData(x, y, 1, 1);
+                this.ctx.fillStyle = "0000FF";
+                this.ctx.fillRect(x, y, 1, 1);
+                data = pixel.data;
+                rgba = 'rgba(' + data[0] + ', ' + data[1] +
+                    ', ' + data[2] + ', ' + (data[3] / 255) + ')';
+
+                if (data[0] + data[1] + data[2] == 765)
+                    bitStorage.push(1);
+                else if (data[0] + data[1] + data[2] == 420)
+                    bitStorage.push(0);
+
+                //Add width && Rotate
+                x += Proportions.getShortBarWidth() + y * Math.sin(Proportions.getLogoRotation()) + x * Math.cos(Proportions.getLogoRotation());
+
+                y += y * Math.cos(Proportions.getLogoRotation()) + x * Math.sin(Proportions.getLogoRotation());
 
             }
+            console.log(bitStorage);
         }
     }
 
@@ -185,4 +223,3 @@ class scanner {
 }
 
 new scanner('barcode.png').draw();
-
