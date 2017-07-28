@@ -4,16 +4,7 @@
 export class ProportionUtil {
 
     private logo: ILogoDetail;
-
-    /*this.logo = {
-     width: 380,
-     height: 450,
-     barWidth: 10,
-     stripHeight: 40,
-     BARSPERSTRIP: 24,
-     }*/
-
-    private strips: IStrip[] = []; // Measured in percentages
+    private strips: IStrip[] = [];
     private dataPoints: IPoint[] = [];
 
 
@@ -37,7 +28,7 @@ export class ProportionUtil {
             stripHeight: 4 / 38, // A bar is 4/38ths of the logo width, the logo is drawn
             BARSPERSTRIP: 24, // There are 24 bars of data in each strip of the logo
             radiansRotated: Math.atan(heightCalcTriangleHeight / heightCalcTriangleWidth) // If the logo is rotated
-        }
+        };
 
         this.buildStripLocations();
         this.buildDataPoints();
@@ -56,7 +47,7 @@ export class ProportionUtil {
             isVertical: false
         });
         this.strips.push({
-            start: {x: 0, y: 32 * this.getShortBarHeight()},
+            start: {x: 0.5 * this.getTallBarWidth(), y: 32 * this.getShortBarHeight()},
             length: this.logo.BARSPERSTRIP,
             isVertical: false
         });
@@ -65,27 +56,30 @@ export class ProportionUtil {
             length: this.logo.BARSPERSTRIP,
             isVertical: false
         });
-        this.strips.push({start:{x: 12.5 * this.getTallBarWidth(), y: 17 * this.getShortBarHeight()},
+        this.strips.push({
+            start: {x: 12.5 * this.getTallBarWidth(), y: 17 * this.getShortBarHeight()},
             length: this.logo.BARSPERSTRIP,
             isVertical: false
         });
         // Vertical Strips
-        this.strips.push({start:{x: 2 * this.getTallBarWidth(), y: 4.5 * this.getShortBarHeight()},
+        this.strips.push({
+            start: {x: 2 * this.getTallBarWidth(), y: 4.5 * this.getShortBarHeight()},
             length: this.logo.BARSPERSTRIP,
             isVertical: true
         });
-        this.strips.push({start:{x: 36 * this.getTallBarWidth(), y: 13 * this.getShortBarHeight()},
+        this.strips.push({
+            start: {x: 36 * this.getTallBarWidth(), y: 13 * this.getShortBarHeight()},
             length: this.logo.BARSPERSTRIP,
             isVertical: true
         });
     }
-    
+
     private buildDataPoints(): void {
-        for(let i = 0; i < this.strips.length; i++) {
+        for (let i = 0; i < this.strips.length; i++) {
             this.dataPoints.concat(this.getDataPointsOfStrip(this.strips[i]));
         }
 
-        for(let i = 0; i < this.dataPoints.length; i++) {
+        for (let i = 0; i < this.dataPoints.length; i++) {
             // Add offset to account for the rest of the image to DataPoint Coordinates
             this.dataPoints[i] = this.getImageCoordFromLogoCoord(this.dataPoints[i]);
         }
@@ -150,8 +144,8 @@ export class ProportionUtil {
         let tempX = logoCoord.x - this.topCorner.x;
         let tempY = logoCoord.y - this.topCorner.y;
         // Apply rotation
-        let rotatedX = (tempY * Math.sin(-this.logo.radiansRotated)) + (tempX * Math.cos(-this.logo.radiansRotated));
-        let rotatedY = (-tempY * Math.cos(-this.logo.radiansRotated)) + (tempX * Math.sin(-this.logo.radiansRotated));
+        let rotatedX = (-tempY * Math.sin(this.logo.radiansRotated)) + (tempX * Math.cos(this.logo.radiansRotated));
+        let rotatedY = (tempY * Math.cos(this.logo.radiansRotated)) + (tempX * Math.sin(this.logo.radiansRotated));
         // Undo original translation
         let x = rotatedX + this.topCorner.x;
         let y = rotatedY + this.topCorner.y;
