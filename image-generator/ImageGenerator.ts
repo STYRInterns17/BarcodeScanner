@@ -45,7 +45,7 @@ class ImageGenerator {
         console.log(ans);
 
         this.ctx.translate(canvasHeight / 2, canvasHeight / 2);
-        this.ctx.rotate((Math.PI/180)* 45);
+        this.ctx.rotate((Math.PI / 180) * 45);
         //this.ctx.strokeRect(0, 0, 10, 10);
         this.ctx.fillStyle = "green";
 
@@ -61,8 +61,7 @@ class ImageGenerator {
         //draw binary data
         this.populateSection(ans[20], boxWidth * 4, 0, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[21], boxWidth * 10, 0, boxWidth * 6, boxHeight, 0, false);
-        this.populateSection(ans[22], boxWidth * 16, 0, boxWid+
-            th * 6, boxHeight, 0, false);
+        this.populateSection(ans[22], boxWidth * 16, 0, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[23], boxWidth * 22, 0, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[19], boxWidth * 4, -boxWidth * 4, boxWidth * 6, boxHeight, 90, false);
         this.populateSection(ans[18], boxWidth * 10, -boxWidth * 4, boxWidth * 6, boxHeight, 90, false);
@@ -73,10 +72,10 @@ class ImageGenerator {
         this.populateSection(ans[13], boxWidth * 12, boxWidth * 28, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[12], boxWidth * 18, boxWidth * 28, boxWidth * 6, boxHeight, 0, false);
 
-        this.populateSection(ans[11], boxWidth * 14, boxWidth * 13, boxWidth* 6, boxHeight, 0, false);
-        this.populateSection(ans[10], boxWidth * 20, boxWidth * 13, boxWidth* 6, boxHeight, 0, false);
-        this.populateSection(ans[9], boxWidth * 26, boxWidth * 13, boxWidth* 6, boxHeight, 0, false);
-        this.populateSection(ans[8], boxWidth * 32, boxWidth * 13, boxWidth* 6, boxHeight, 0, false);
+        this.populateSection(ans[11], boxWidth * 14, boxWidth * 13, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[10], boxWidth * 20, boxWidth * 13, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[9], boxWidth * 26, boxWidth * 13, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[8], boxWidth * 32, boxWidth * 13, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[7], boxWidth * 17, -boxWidth * 38, boxWidth * 6, boxHeight, 90, false);
         this.populateSection(ans[6], boxWidth * 23, -boxWidth * 38, boxWidth * 6, boxHeight, 90, false);
         this.populateSection(ans[5], boxWidth * 29, -boxWidth * 38, boxWidth * 6, boxHeight, 90, false);
@@ -122,7 +121,7 @@ class ImageGenerator {
         this.ctx.restore();
     }
 
-    public exportImage(): HTMLImageElement{
+    public exportImage(): HTMLImageElement {
         return this.image;
     }
 }
