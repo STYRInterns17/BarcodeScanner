@@ -21,7 +21,7 @@ class ImageGenerator {
     }
 
     private createImage() {
-        //Image is 38 boxWidths wide by 45 boxwidths long
+        //Image is 38 boxWidths wide by 45 boxWidths long
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.ctx = this.canvas.getContext('2d');
         //calculate canvas height necessary for rotation to still be within canvas
@@ -61,25 +61,26 @@ class ImageGenerator {
         //draw binary data
         this.populateSection(ans[20], boxWidth * 4, 0, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[21], boxWidth * 10, 0, boxWidth * 6, boxHeight, 0, false);
-        this.populateSection(ans[22], boxWidth * 16, 0, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[22], boxWidth * 16, 0, boxWid+
+            th * 6, boxHeight, 0, false);
         this.populateSection(ans[23], boxWidth * 22, 0, boxWidth * 6, boxHeight, 0, false);
-        this.populateSection(ans[19], boxWidth * 4, -boxWidth * 4, boxWidth * 6, boxHeight, 90, true);
-        this.populateSection(ans[18], boxWidth * 10, -boxWidth * 4, boxWidth * 6, boxHeight, 90, true);
-        this.populateSection(ans[17], boxWidth * 16, -boxWidth * 4, boxWidth * 6, boxHeight, 90, true);
-        this.populateSection(ans[16], boxWidth * 22, -boxWidth * 4, boxWidth * 6, boxHeight, 90, true);
-        this.populateSection(ans[15], 0, boxWidth * 28, boxWidth * 6, boxHeight, 0, true);
-        this.populateSection(ans[14], boxWidth * 6, boxWidth * 28, boxWidth * 6, boxHeight, 0, true);
-        this.populateSection(ans[13], boxWidth * 12, boxWidth * 28, boxWidth * 6, boxHeight, 0, true);
-        this.populateSection(ans[12], boxWidth * 18, boxWidth * 28, boxWidth * 6, boxHeight, 0, true);
+        this.populateSection(ans[19], boxWidth * 4, -boxWidth * 4, boxWidth * 6, boxHeight, 90, false);
+        this.populateSection(ans[18], boxWidth * 10, -boxWidth * 4, boxWidth * 6, boxHeight, 90, false);
+        this.populateSection(ans[17], boxWidth * 16, -boxWidth * 4, boxWidth * 6, boxHeight, 90, false);
+        this.populateSection(ans[16], boxWidth * 22, -boxWidth * 4, boxWidth * 6, boxHeight, 90, false);
+        this.populateSection(ans[15], 0, boxWidth * 28, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[14], boxWidth * 6, boxWidth * 28, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[13], boxWidth * 12, boxWidth * 28, boxWidth * 6, boxHeight, 0, false);
+        this.populateSection(ans[12], boxWidth * 18, boxWidth * 28, boxWidth * 6, boxHeight, 0, false);
 
-        this.populateSection(ans[11], boxWidth * 14, boxWidth * 13, boxWidth* 6, boxHeight, 0, true);
-        this.populateSection(ans[10], boxWidth * 20, boxWidth * 13, boxWidth* 6, boxHeight, 0, true);
-        this.populateSection(ans[9], boxWidth * 26, boxWidth * 13, boxWidth* 6, boxHeight, 0, true);
-        this.populateSection(ans[8], boxWidth * 32, boxWidth * 13, boxWidth* 6, boxHeight, 0, true);
-        this.populateSection(ans[7], boxWidth * 17, -boxWidth * 38, boxWidth * 6, boxHeight, 90, true);
-        this.populateSection(ans[6], boxWidth * 23, -boxWidth * 38, boxWidth * 6, boxHeight, 90, true);
-        this.populateSection(ans[5], boxWidth * 29, -boxWidth * 38, boxWidth * 6, boxHeight, 90, true);
-        this.populateSection(ans[4], boxWidth * 35, -boxWidth * 38, boxWidth * 6, boxHeight, 90, true);
+        this.populateSection(ans[11], boxWidth * 14, boxWidth * 13, boxWidth* 6, boxHeight, 0, false);
+        this.populateSection(ans[10], boxWidth * 20, boxWidth * 13, boxWidth* 6, boxHeight, 0, false);
+        this.populateSection(ans[9], boxWidth * 26, boxWidth * 13, boxWidth* 6, boxHeight, 0, false);
+        this.populateSection(ans[8], boxWidth * 32, boxWidth * 13, boxWidth* 6, boxHeight, 0, false);
+        this.populateSection(ans[7], boxWidth * 17, -boxWidth * 38, boxWidth * 6, boxHeight, 90, false);
+        this.populateSection(ans[6], boxWidth * 23, -boxWidth * 38, boxWidth * 6, boxHeight, 90, false);
+        this.populateSection(ans[5], boxWidth * 29, -boxWidth * 38, boxWidth * 6, boxHeight, 90, false);
+        this.populateSection(ans[4], boxWidth * 35, -boxWidth * 38, boxWidth * 6, boxHeight, 90, false);
         this.populateSection(ans[3], boxWidth * 28, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[2], boxWidth * 22, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);
         this.populateSection(ans[1], boxWidth * 16, boxWidth * 41, boxWidth * 6, boxHeight, 0, false);

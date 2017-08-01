@@ -81,7 +81,7 @@ class scanner {
 
         console.log(scanWidth);
         console.log(scanHeight);
-        console.log(this.findBluePixel(scanWidth, scanHeight));
+        console.log(this.findFirstBluePixel(scanWidth, scanHeight));
     };
 
     private scan() {
@@ -90,11 +90,11 @@ class scanner {
             x: 840,
             y: 3
         };
-        let sideCorner: IPoint  = {
+        let sideCorner: IPoint = {
             x: 3,
             y: 840
         };
-        let bottomCorner: IPoint  = {
+        let bottomCorner: IPoint = {
             x: 709,
             y: 1546
         };
@@ -152,7 +152,7 @@ class scanner {
         console.log(bitStorage);
     }
 
-    private rotateImage(){
+    private rotateImage() {
         //Set origin of the screen to the side corner pixel
 
         //Check if the image after a single counter clockwise rotation
@@ -213,7 +213,7 @@ class scanner {
         this.ctx.putImageData(imageData, 0, 0);
     }
 
-    private findBluePixel(scanWidth: number, scanHeight: number) {
+    private findFirstBluePixel(scanWidth: number, scanHeight: number) {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < scanHeight; j++) {
                 let scanX = Math.round(scanWidth / 4 * (3 - i) + scanWidth);
@@ -224,19 +224,23 @@ class scanner {
                     console.log(this.isBlue(904, 66));
                     console.log("Success");
                     console.log("First blue pixel: ", scanX, " ", scanY);
+
+                    //find top corner of top blue square
                     let firstCoord = this.findTopSquareCorner(scanX, scanY, []);
                     let secondCoord = this.findRightSquareCorner(scanX, scanY, []);
                     console.log(firstCoord, secondCoord);
 
+                    //calculate bluesquare width based of the two corners found
                     let blueSquareWidth = Math.sqrt((Math.pow(firstCoord.x - secondCoord.x, 2)) + Math.pow(firstCoord.y - secondCoord.y, 2));
-                    
+                    // calculated corners of blue squares we need to check and verify the actual corners
                     let topLeftDist = (blueSquareWidth * 45) / 4;
                     let topBottomDist = (blueSquareWidth * 38) / 4;
-
-                    this.ctx.translate(firstCoord.x,firstCoord.y);
-                    this.ctx.rotate(Math.PI/4);
-                    this.ctx.fillRect(0, 1183, 10, 10);
-                    this.ctx.fillRect(994, 1183, 10, 10);
+                    console.log(topLeftDist, topBottomDist);
+                    //this.findBluePixelEstimated(topLeftDist, scanWidth);
+                    this.ctx.translate(firstCoord.x, firstCoord.y);
+                    this.ctx.rotate(Math.PI / 4);
+                    this.ctx.fillRect(0, 1183, 100, 100);
+                    this.ctx.fillRect(994, 1183, 2, 2);
                     return ("Found blue pixel");
                 }
                 // rgba = 'rgba(' + data[0] + ', ' + data[1] +
@@ -286,6 +290,51 @@ class scanner {
 
         }
     }
+
+    private findBluePixelEstimated(y, scanWidth: number) {
+        for (let j = 0; j < scanWidth / 2; j++) {
+            let scanX = j;
+            let scanY = y;
+            if (this.isBlue(scanX, scanY)) {
+                console.log("Hooray we found the second square")
+                console.log("found the second square at: ",scanX, scanY);
+            }
+        }
+        for (let j = 0; j < scanWidth / 2; j++) {
+            let scanX = j;
+            let scanY = y + 50;
+            if (this.isBlue(scanX, scanY)) {
+                console.log("found the second square at: ",scanX, scanY);
+            }
+        }
+        for (let j = 0; j < scanWidth / 2; j++) {
+            let scanX = j;
+            let scanY = y - 50;
+            if (this.isBlue(scanX, scanY)) {
+                console.log("found the second square at: ",scanX, scanY);
+            }
+        }
+    }
+
+    private findLeftSquareCorner(x: number, y: number,): IPoint {
+        this.ctx.fillStyle = "red";
+        this.ctx.fillRect(x, y, 1, 1);
+        let coord: IPoint = {x: x, y: y};
+        //Might need to increase search area as pixels around square edges tend to be lighter blue
+        if (this.isBlue(x - 1, y + 1)) {
+            //we know we are on the UPPER left side
+            console.log("RECURSIONLEFT!!!");
+            return this.findLeftSquareCorner(x - 1, y + 1);
+        } else if (this.isBlue(x - 1, y - 1)) {
+            console.log("RECURSIONLEFT!!!!!!!");
+            return this.findLeftSquareCorner(x - 1, y - 1);
+        } else {
+            //we are on leftSquare corner
+            return (coord)
+
+        }
+    }
+
 }
 
 interface IPoint {
