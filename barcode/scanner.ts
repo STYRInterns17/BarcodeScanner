@@ -76,9 +76,8 @@ class scanner {
     }
 
     private barcodeScanner2() {
-        let scanWidth = this.canvas.width / 3;
-        let scanHeight = this.canvas.height / 4;
-
+        let scanWidth = this.canvas.width / 5;
+        let scanHeight = this.canvas.height / 5;
         console.log(scanWidth);
         console.log(scanHeight);
         console.log(this.findFirstBluePixel(scanWidth, scanHeight));
@@ -87,16 +86,16 @@ class scanner {
     private scan() {
 
         let topCorner: IPoint = {
-            x: 840,
-            y: 3
+            x: 1685,
+            y: 1168
         };
-        let sideCorner: IPoint = {
-            x: 3,
-            y: 840
+        let sideCorner: IPoint  = {
+            x: 1613,
+            y: 2229
         };
-        let bottomCorner: IPoint = {
-            x: 709,
-            y: 1546
+        let bottomCorner: IPoint  = {
+            x: 1481,
+            y: 3001
         };
 
         let heightCalcTriangleWidth = topCorner.x - sideCorner.x;
@@ -107,55 +106,53 @@ class scanner {
 
         this.ctx.translate(topCorner.x, topCorner.y);
         this.ctx.rotate(rotateAngle);
-        this.ctx.fillRect(0, 0, 100, 10);
+        this.ctx.fillRect(0, 0, 1000, 100);
 
+        let distance = (Math.sqrt(Math.pow((sideCorner.x - topCorner.x), 2) + Math.pow((sideCorner.y - topCorner.y), 2)));
+        console.log("height: ", distance);
 
-        let Proportions = new ProportionUtil(topCorner, bottomCorner, sideCorner);
+        let topCornerRotated: IPoint = {
+            x: 0,
+            y: 0
+        };
+
+        let sideCornerRotated: IPoint  = {
+            x: 0,
+            y: distance
+        };
+
+        let distance2 = (Math.sqrt(Math.pow((sideCorner.x - bottomCorner.x), 2) + Math.pow((sideCorner.y - bottomCorner.y), 2)));
+        console.log("width: ", distance2);
+
+        let bottomCornerRotated: IPoint  = {
+            x: distance,
+            y: distance2
+        };
+
+        let Proportions = new ProportionUtil(topCornerRotated, bottomCornerRotated, sideCornerRotated);
         let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
         let data = imageData.data;
         let pixel, rgba;
         let bitStorage = [];
 
-        for (let x = 226; x < (this.canvas.width / 36) * 24; x++) {
-            for (let y = 988; y < (this.canvas.width / 36) * 24; y++) {
+        let dataPoints = Proportions.getDataPoints();
 
-                //Check Color
-                pixel = this.ctx.getImageData(x, y, 1, 1);
-                console.log(x, y);
-                this.ctx.fillStyle = "FF00FF";
-                this.ctx.fillRect(x, y, 1, 1);
-                data = pixel.data;
-                rgba = 'rgba(' + data[0] + ', ' + data[1] +
-                    ', ' + data[2] + ', ' + (data[3] / 255) + ')';
-                console.log(rgba);
+        for(let i = 0; i < dataPoints.length; i++) {
+            pixel = this.ctx.getImageData(dataPoints[i].x, dataPoints[i].y, 1, 1);
+            console.log(dataPoints[i].x, dataPoints[i].y);
+            this.ctx.fillStyle = "FF00FF";
+            data = pixel.data;
+            rgba = 'rgba(' + data[0] + ', ' + data[1] +
+                ', ' + data[2] + ', ' + (data[3] / 255) + ')';
+            console.log(rgba);
 
-                if (data[0] + data[1] + data[2] == 765) //765
-                    bitStorage.push(1);
-                else if (data[0] + data[1] + data[2] == 420) //420
-                    bitStorage.push(0);
-
-                //Add width && Rotate Both points
-                x += Proportions.getShortBarWidth() - y * Math.sin(Proportions.getLogoRotation()) + x * Math.cos(Proportions.getLogoRotation());
-
-                y += y * Math.cos(Proportions.getLogoRotation()) + x * Math.sin(Proportions.getLogoRotation());
-
-                console.log(x, y);
-
-                let newPoint: IPoint = {
-                    x: x,
-                    y: y
-                };
-
-                Proportions.getImageCoordFromLogoCoord(newPoint);
+            if (data[0] + data[1] + data[2] == 765) {
+                bitStorage.push(1);
+            } else if (data[0] + data[1] + data[2] == 420) {
+                bitStorage.push(0);
             }
+            this.ctx.fillRect(dataPoints[i].x, dataPoints[i].y, 10, 10);
         }
-        console.log(bitStorage);
-    }
-
-    private rotateImage() {
-        //Set origin of the screen to the side corner pixel
-
-        //Check if the image after a single counter clockwise rotation
     }
 
     /*
@@ -232,7 +229,7 @@ class scanner {
 
                     //calculate bluesquare width based of the two corners found
                     let blueSquareWidth = Math.sqrt((Math.pow(firstCoord.x - secondCoord.x, 2)) + Math.pow(firstCoord.y - secondCoord.y, 2));
-                    // calculated corners of blue squares we need to check and verify the actual corners
+
                     let topLeftDist = (blueSquareWidth * 45) / 4;
                     let topBottomDist = (blueSquareWidth * 38) / 4;
                     console.log(topLeftDist, topBottomDist);
@@ -337,8 +334,4 @@ class scanner {
 
 }
 
-interface IPoint {
-    x: number,
-    y: number
-}
 new scanner('barcode.png').draw();
